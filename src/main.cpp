@@ -11,7 +11,7 @@ using namespace sf;
 const int width = 800u;
 const int height = 600u;
 
-const float speed = 10.0f;
+const float speed = 15.0f;
 
 int main() {
     ContextSettings settings;
@@ -20,7 +20,7 @@ int main() {
 
 
     Clock deltaClock;
-    SimulationManager manager(10, width, height);
+    SimulationManager manager(20, width, height);
 
     while (window.isOpen()) {
         // pollEvent returns std::optional<Event>
@@ -32,7 +32,9 @@ int main() {
 
         Time deltaTime = deltaClock.restart();
         float distance = deltaTime.asSeconds() * speed;
+
         manager.move_boids(distance);
+        manager.reset_edge();
 
         window.clear();
         for(const auto* shape: manager.get_shapes()) {

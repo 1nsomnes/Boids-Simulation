@@ -15,6 +15,8 @@ float random_percent() {
 }
 
 SimulationManager::SimulationManager(size_t boids, int width, int height) {
+  this->width = width;
+  this->height = height;
 
   for(int i = 0; i < boids; ++i) {
     CircleShape* shape = new CircleShape(8.f, 3);
@@ -30,6 +32,26 @@ void SimulationManager::move_boids(float dist) {
     Vector2f direction(cos(rad), sin(rad));
 
     boid->move(direction * dist);
+  }
+}
+
+void SimulationManager::reset_edge() {
+  for(auto boid : shapes) {
+    Vector2f boid_position = boid->getPosition();
+
+    if(boid_position.x < 0) {
+      boid_position.x = width;
+    } else if(boid_position.x > width) {
+      boid_position.x = 0;
+    }
+
+    if(boid_position.y < 0) {
+      boid_position.y = height;
+    } else if(boid_position.y > height) { 
+      boid_position.y = 0;
+    }
+
+    boid->setPosition(boid_position);
   }
 }
 
