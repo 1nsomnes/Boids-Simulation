@@ -20,7 +20,7 @@ int main() {
 
 
     Clock deltaClock;
-    SimulationManager manager(20, width, height);
+    SimulationManager manager(10, width, height);
 
     while (window.isOpen()) {
         // pollEvent returns std::optional<Event>
@@ -30,16 +30,18 @@ int main() {
             }
         }
 
-        Time deltaTime = deltaClock.restart();
-        float distance = deltaTime.asSeconds() * speed;
+        float deltaTime = deltaClock.restart().asSeconds();
+        float distance = deltaTime * speed;
 
         manager.move_boids(distance);
+        manager.apply_boid_behavior(deltaTime);
         manager.reset_edge();
 
         window.clear();
         for(const auto* shape: manager.get_shapes()) {
           window.draw(*shape);
         }
+        manager.draw_direction_lines(window);
         window.display();
     }
     return 0;
