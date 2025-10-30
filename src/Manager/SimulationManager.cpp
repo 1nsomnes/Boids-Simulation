@@ -73,7 +73,19 @@ float calculate_separation(const Shape *source,
 float calculate_alignment(const Shape *source,
                           const vector<Shape *> within_radius) {
   if(within_radius.size() == 0) return 0.f;
-  return 0;
+
+  float avg_rotation = source->getRotation().asDegrees();
+  for(int i = 0; i < within_radius.size(); ++i) {
+    avg_rotation += within_radius[i]->getRotation().asDegrees();
+  }
+
+  int num_of_points = within_radius.size()+1;
+  avg_rotation /= num_of_points;
+
+  float direction = utils::rotate_direction(source->getRotation().asDegrees(), avg_rotation);
+  
+  return steer_strength * direction;
+
 }
 
 float calculate_cohesion(const Shape *source,
@@ -104,12 +116,12 @@ void SimulationManager::apply_boid_behavior(float deltaTime) {
       if (i != j) {
         auto dist =
             utils::distance(shapes[i]->getPosition(), shapes[j]->getPosition());
-        if (dist < 400) {
+        if (dist < 300) {
           within_radius.push_back(shapes[j]);
         }
       }
     }
-    const float weights[3] = {0.2f, 0.6f, 0.2f};
+    const float weights[3] = {0.2f, 0.3f, 0.2f};
     auto applied_rotation = weights[0] * calculate_separation(shapes[i], within_radius) +
                             weights[1] * calculate_alignment(shapes[i], within_radius) +
                             weights[2] * calculate_cohesion(shapes[i], within_radius);

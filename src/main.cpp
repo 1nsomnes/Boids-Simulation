@@ -11,7 +11,8 @@ using namespace sf;
 const int width = 800u;
 const int height = 600u;
 
-const float speed = 15.0f;
+const size_t number_of_boids = 30;
+const float speed = 40.0f;
 
 int main() {
     ContextSettings settings;
@@ -20,7 +21,7 @@ int main() {
 
 
     Clock deltaClock;
-    SimulationManager manager(10, width, height);
+    SimulationManager manager(number_of_boids, width, height);
 
     while (window.isOpen()) {
         // pollEvent returns std::optional<Event>
@@ -41,7 +42,6 @@ int main() {
         for(const auto* shape: manager.get_shapes()) {
           window.draw(*shape);
         }
-        manager.draw_direction_lines(window);
         window.display();
     }
     return 0;
