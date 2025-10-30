@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++17 -I./SFML-3.0.2/include
 LDFLAGS = -L./SFML-3.0.2/lib
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = app
-SRC = main.cpp
+SRC = src/main.cpp src/Manager/SimulationManager.cpp
 
 all: $(TARGET)
 

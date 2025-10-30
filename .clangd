@@ -1,5 +1,5 @@
 CompileFlags:
   Add:
     - -std=c++17
-    - -I./SFML-3.0.2/include
-    - -L./SFML-3.0.2/lib
+    - -I/Users/ced/Documents/Programming/c++/boids/SFML-3.0.2/include
+    - -L/Users/ced/Documents/Programming/c++/boids/SFML-3.0.2/lib
