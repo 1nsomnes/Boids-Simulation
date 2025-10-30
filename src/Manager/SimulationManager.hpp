@@ -7,5 +7,6 @@ class SimulationManager {
   public:
     SimulationManager(size_t, int, int);
     const vector<sf::Shape*> get_shapes() const;
+    void move_boids(float);
   
 };

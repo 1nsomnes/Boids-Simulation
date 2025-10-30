@@ -11,7 +11,7 @@ using namespace sf;
 const int width = 800u;
 const int height = 600u;
 
-const float speed = 2.0f;
+const float speed = 10.0f;
 
 int main() {
     ContextSettings settings;
@@ -30,11 +30,9 @@ int main() {
             }
         }
 
-        /*
-        Time deltaTime = deltaClock.restart();   
-        shape.move({deltaTime.asSeconds() * speed, 0.0f});
-        Vector2f test = shape.getPosition();
-        */
+        Time deltaTime = deltaClock.restart();
+        float distance = deltaTime.asSeconds() * speed;
+        manager.move_boids(distance);
 
         window.clear();
         for(const auto* shape: manager.get_shapes()) {
