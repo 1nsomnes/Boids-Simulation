@@ -1,5 +1,4 @@
-
-#include "utils.hpp";
+#include "utils.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <cmath>
 

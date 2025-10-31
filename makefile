@@ -8,7 +8,7 @@ TARGET = app
 SRC := $(wildcard src/**/*.cpp src/*.cpp) 
 
 TEST_TARGET = test_app
-TEST_SRC := $(wildcard src/**/*.cpp, tests/*.cpp)
+TEST_SRC := $(wildcard src/**/*.cpp tests/main.cpp)
 
 all: $(TARGET)
 
@@ -19,10 +19,10 @@ run: $(TARGET)
 	DYLD_LIBRARY_PATH=./SFML-3.0.2/lib ./$(TARGET)
 
 run-tests: $(TEST_TARGET)
-	DYLD_LIBRARY_PATH=./SFML-3.0.2/lib ./$(TARGET)
+	DYLD_LIBRARY_PATH=./SFML-3.0.2/lib ./$(TEST_TARGET)
 
 $(TEST_TARGET): $(TEST_SRC)
-	$(CXX) $(CXXFLAGS) $(TEST_SRC) -o $(TARGET) $(LDFLAGS) $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(TEST_SRC) -o $(TEST_TARGET) $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(TARGET)

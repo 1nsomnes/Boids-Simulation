@@ -129,15 +129,11 @@ float calculate_cohesion(const Shape *source,
 void SimulationManager::apply_boid_behavior(float deltaTime) {
   for (int i = 0; i < shapes.size(); ++i) {
     vector<Shape *> within_radius;
-
     for (int j = 0; j < shapes.size(); ++j) {
       if (i != j) {
-        //cout << "dist (" << shapes[i]->getPosition().x << ", " << shapes[i]->getPosition().y << ") to (" << shapes[j]->getPosition().x << ", " << shapes[j]->getPosition().y  << ") ";
         if( utils::check_distance(shapes[i]->getPosition(), shapes[j]->getPosition(), width, height, distance_threshold) ) {
-          //cout << "is within threshold";
           within_radius.push_back(shapes[j]);
         }
-        cout << endl;
       }
     }
     const float weights[3] = {0.4f, 0.4f, 0.2f};
