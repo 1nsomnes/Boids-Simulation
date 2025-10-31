@@ -13,7 +13,7 @@ const int width = 800u;
 const int height = 600u;
 
 const size_t number_of_boids = 50;
-const float speed = 40.0f;
+const float speed = 70.0f;
 
 int main() {
     ContextSettings settings;

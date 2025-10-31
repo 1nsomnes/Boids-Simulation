@@ -7,6 +7,9 @@ LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = app
 SRC := $(wildcard src/**/*.cpp src/*.cpp) 
 
+TEST_TARGET = test_app
+TEST_SRC := $(wildcard src/**/*.cpp, tests/*.cpp)
+
 all: $(TARGET)
 
 $(TARGET): $(SRC)
@@ -14,6 +17,12 @@ $(TARGET): $(SRC)
 
 run: $(TARGET)
 	DYLD_LIBRARY_PATH=./SFML-3.0.2/lib ./$(TARGET)
+
+run-tests: $(TEST_TARGET)
+	DYLD_LIBRARY_PATH=./SFML-3.0.2/lib ./$(TARGET)
+
+$(TEST_TARGET): $(TEST_SRC)
+	$(CXX) $(CXXFLAGS) $(TEST_SRC) -o $(TARGET) $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(TARGET)

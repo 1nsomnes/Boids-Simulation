@@ -14,7 +14,7 @@ std::mt19937 mt(6473);
 std::uniform_int_distribution<int> dist(0, 10000);
 
 const float steer_strength = 20.f;
-const float distance_threshold = 150.f;
+const float distance_threshold = 100.f;
 
 float random_percent() { return (dist(mt) / 10000.f); }
 
@@ -125,42 +125,6 @@ float calculate_cohesion(const Shape *source,
   return steer_strength * direction;
 }
 
-bool check_distance(Shape* source, Shape* to, int width, int height, float distance_threshold) {
-  auto source_pos = source->getPosition();
-  auto to_pos = to->getPosition();
-  
-  auto dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x -= width;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x += 2*width;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x -= width;
-  source_pos.y += height;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist< distance_threshold) {
-    return true;
-  }
-
-  source_pos.y -= 2*height;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  return false;
-}
 
 void SimulationManager::apply_boid_behavior(float deltaTime) {
   for (int i = 0; i < shapes.size(); ++i) {
@@ -168,12 +132,15 @@ void SimulationManager::apply_boid_behavior(float deltaTime) {
 
     for (int j = 0; j < shapes.size(); ++j) {
       if (i != j) {
-        if( check_distance(shapes[i], shapes[j], width, height, distance_threshold) ) {
+        //cout << "dist (" << shapes[i]->getPosition().x << ", " << shapes[i]->getPosition().y << ") to (" << shapes[j]->getPosition().x << ", " << shapes[j]->getPosition().y  << ") ";
+        if( utils::check_distance(shapes[i]->getPosition(), shapes[j]->getPosition(), width, height, distance_threshold) ) {
+          //cout << "is within threshold";
           within_radius.push_back(shapes[j]);
         }
+        cout << endl;
       }
     }
-    const float weights[3] = {0.3f, 0.4f, 0.3f};
+    const float weights[3] = {0.4f, 0.4f, 0.2f};
     auto applied_rotation = weights[0] * calculate_separation(shapes[i], within_radius) +
                             weights[1] * calculate_alignment(shapes[i], within_radius) +
                             weights[2] * calculate_cohesion(shapes[i], within_radius);
