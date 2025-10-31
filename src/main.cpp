@@ -1,4 +1,5 @@
 #include "Manager/SimulationManager.hpp"
+#include "SFML/System/Angle.hpp"
 #include "SFML/System/Clock.hpp"
 #include "SFML/Window/ContextSettings.hpp"
 #include "SFML/Window/Keyboard.hpp"
@@ -42,6 +43,7 @@ int main() {
         for(const auto* shape: manager.get_shapes()) {
           window.draw(*shape);
         }
+
         window.display();
     }
     return 0;

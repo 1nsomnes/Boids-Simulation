@@ -1,5 +1,5 @@
 #include "SimulationManager.hpp"
-#include "../util/utils.cpp"
+#include "../util/utils.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/System/Angle.hpp"
@@ -13,7 +13,7 @@ using namespace sf;
 std::mt19937 mt(6473);
 std::uniform_int_distribution<int> dist(0, 10000);
 
-const float steer_strength = 40.f;
+const float steer_strength = 20.f;
 const float distance_threshold = 150.f;
 
 float random_percent() { return (dist(mt) / 10000.f); }
@@ -82,7 +82,7 @@ float calculate_separation(const Shape *source,
   if (com_angle < 0) com_angle += 360;
   float direction = utils::rotate_direction(source->getRotation().asDegrees(), com_angle);
   
-  return steer_strength * direction;
+  return steer_strength * direction * num_of_points;
 }
 
 float calculate_alignment(const Shape *source,
@@ -99,7 +99,7 @@ float calculate_alignment(const Shape *source,
 
   float direction = utils::rotate_direction(source->getRotation().asDegrees(), avg_rotation);
   
-  return steer_strength * direction;
+  return steer_strength * direction * num_of_points;
 
 }
 
@@ -173,7 +173,7 @@ void SimulationManager::apply_boid_behavior(float deltaTime) {
         }
       }
     }
-    const float weights[3] = {0.33f, 0.33f, 0.33f};
+    const float weights[3] = {0.3f, 0.4f, 0.3f};
     auto applied_rotation = weights[0] * calculate_separation(shapes[i], within_radius) +
                             weights[1] * calculate_alignment(shapes[i], within_radius) +
                             weights[2] * calculate_cohesion(shapes[i], within_radius);

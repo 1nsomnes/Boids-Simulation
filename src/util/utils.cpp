@@ -14,7 +14,21 @@ namespace utils {
   
   // 1 for clock wise -1 for counter clockwise
   float rotate_direction(float from, float to) {
-    if(abs(from-to) < 180) return -1.f;
-    return 1.f;
+    //printf("from %f, to %f\n", from, to);
+    if(from == 180.f) {
+      return 1.f;
+    } else if ( from < 180.f ) {
+      auto second_bound = 360 + from - 180;
+      if(to >= second_bound || (to >= 0 && to <= from)) {
+        return -1.f;
+      } 
+      return 1.f;
+    } else {
+      auto second_bound = from + 180 - 360.f;
+      if(to <= second_bound || to >= from) {
+        return 1.f;
+      } 
+      return -1.f;
+    }
   }
 } // namespace utils
