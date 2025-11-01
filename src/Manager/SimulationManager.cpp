@@ -6,6 +6,7 @@
 #include "SFML/System/Vector2.hpp"
 #include "random"
 #include <iostream>
+#include <optional>
 
 using namespace std;
 using namespace sf;
@@ -15,6 +16,11 @@ std::uniform_int_distribution<int> dist(0, 10000);
 
 const float steer_strength = 20.f;
 const float distance_threshold = 100.f;
+
+struct vector_and_degree {
+  Vector2f vec;
+  float deg;
+};
 
 float random_percent() { return (dist(mt) / 10000.f); }
 
@@ -66,12 +72,12 @@ void SimulationManager::reset_edge() {
 }
 
 float calculate_separation(const Shape *source,
-                           const vector<Shape *> within_radius) {
+                           const vector<vector_and_degree>& within_radius) {
   if(within_radius.size() == 0) return 0.f;
 
   Vector2f com = {0.f, 0.f};
   for(int i = 0; i < within_radius.size(); ++i) {
-    com += within_radius[i]->getPosition() - source->getPosition();
+    com += within_radius[i].vec - source->getPosition();
   }
 
   int num_of_points = within_radius.size();
@@ -86,12 +92,12 @@ float calculate_separation(const Shape *source,
 }
 
 float calculate_alignment(const Shape *source,
-                          const vector<Shape *> within_radius) {
+                          const vector<vector_and_degree>& within_radius) {
   if(within_radius.size() == 0) return 0.f;
 
   float avg_rotation = source->getRotation().asDegrees();
   for(int i = 0; i < within_radius.size(); ++i) {
-    avg_rotation += within_radius[i]->getRotation().asDegrees();
+    avg_rotation += within_radius[i].deg;
   }
 
   int num_of_points = within_radius.size()+1;
@@ -104,12 +110,12 @@ float calculate_alignment(const Shape *source,
 }
 
 float calculate_cohesion(const Shape *source,
-                         const vector<Shape *> within_radius) {
+                         const vector<vector_and_degree>& within_radius) {
   if(within_radius.size() == 0) return 0.f;
 
   Vector2f com = source->getPosition();
   for(int i = 0; i < within_radius.size(); ++i) {
-    com += within_radius[i]->getPosition();
+    com += within_radius[i].vec;
   }
 
   int num_of_points = within_radius.size()+1;
@@ -128,15 +134,20 @@ float calculate_cohesion(const Shape *source,
 
 void SimulationManager::apply_boid_behavior(float deltaTime) {
   for (int i = 0; i < shapes.size(); ++i) {
-    vector<Shape *> within_radius;
+    vector<vector_and_degree> within_radius;
     for (int j = 0; j < shapes.size(); ++j) {
       if (i != j) {
-        if( utils::check_distance(shapes[i]->getPosition(), shapes[j]->getPosition(), width, height, distance_threshold) ) {
-          within_radius.push_back(shapes[j]);
+        auto relative_distance = utils::get_relative_distance(shapes[i]->getPosition(), shapes[j]->getPosition(), width, height, distance_threshold);
+        if( relative_distance != nullopt ) {
+          vector_and_degree tmp;
+          tmp.deg = shapes[j]->getRotation().asDegrees();
+          tmp.vec = relative_distance.value();
+
+          within_radius.push_back(tmp);
         }
       }
     }
-    const float weights[3] = {0.4f, 0.4f, 0.2f};
+    const float weights[3] = {0.3f, 0.3f, 0.3f};
     auto applied_rotation = weights[0] * calculate_separation(shapes[i], within_radius) +
                             weights[1] * calculate_alignment(shapes[i], within_radius) +
                             weights[2] * calculate_cohesion(shapes[i], within_radius);

@@ -63,3 +63,37 @@ bool utils::check_distance(Vector2f source_pos, Vector2f to_pos, int width, int 
 
   return false;
 }
+
+optional<Vector2f> utils::get_relative_distance(Vector2f source_pos, Vector2f to_pos, int width, int height, float distance_threshold) {
+  auto dist = utils::distance(source_pos, to_pos);
+  if(dist < distance_threshold) {
+    return source_pos;
+  }
+
+  source_pos.x -= width;
+  dist = utils::distance(source_pos, to_pos);
+  if(dist < distance_threshold) {
+    return source_pos;
+  }
+
+  source_pos.x += 2*width;
+  dist = utils::distance(source_pos, to_pos);
+  if(dist < distance_threshold) {
+    return source_pos;
+  }
+
+  source_pos.x -= width;
+  source_pos.y += height;
+  dist = utils::distance(source_pos, to_pos);
+  if(dist< distance_threshold) {
+    return source_pos;
+  }
+
+  source_pos.y -= 2*height;
+  dist = utils::distance(source_pos, to_pos);
+  if(dist < distance_threshold) {
+    return source_pos;
+  }
+
+  return nullopt;
+}
