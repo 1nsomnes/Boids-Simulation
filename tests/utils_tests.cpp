@@ -6,7 +6,7 @@ using namespace std;
 template<typename T>
 bool assert_equal(T t1, T t2) {
   if(t1 == t2) return true; 
-  cout << "Test failed" ;
+  cout << "Test failed";
   return false;
 };
 
@@ -25,11 +25,6 @@ void run_utils_tests() {
   assert_equal(1.f, utils::rotate_direction(170, 182));
    
   // check distance test
-  assert_equal(true, utils::check_distance({0.0f, 0.0f}, {0.0f, 0.0f}, 500, 500, 100.f));
-  assert_equal(true, utils::check_distance({0.0f, 0.0f}, {99.0f, 0.0f}, 500, 500, 100.f));
-  assert_equal(true, utils::check_distance({0.0f, 0.0f}, {0.0f, 99.0f}, 500, 500, 100.f));
-  assert_equal(true, utils::check_distance({250.f, 0.0f}, {250.f, 500.f}, 500, 500, 100.f));
-  assert_equal(true, utils::check_distance({0.0f, 250.0f}, {500.0f, 225.0f}, 500, 500, 100.f));
   
 }
 

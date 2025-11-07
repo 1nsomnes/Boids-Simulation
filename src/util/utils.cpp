@@ -30,40 +30,6 @@ float utils::rotate_direction(float from, float to) {
   }
 }
 
-bool utils::check_distance(Vector2f source_pos, Vector2f to_pos, int width, int height, float distance_threshold) {
-  auto dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x -= width;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x += 2*width;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  source_pos.x -= width;
-  source_pos.y += height;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist< distance_threshold) {
-    return true;
-  }
-
-  source_pos.y -= 2*height;
-  dist = utils::distance(source_pos, to_pos);
-  if(dist < distance_threshold) {
-    return true;
-  }
-
-  return false;
-}
-
 optional<Vector2f> utils::get_relative_distance(Vector2f source_pos, Vector2f to_pos, int width, int height, float distance_threshold) {
   auto dist = utils::distance(source_pos, to_pos);
   if(dist < distance_threshold) {

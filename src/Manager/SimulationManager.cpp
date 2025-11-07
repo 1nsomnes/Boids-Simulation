@@ -14,8 +14,10 @@ using namespace sf;
 std::mt19937 mt(6473);
 std::uniform_int_distribution<int> dist(0, 10000);
 
-const float steer_strength = 20.f;
+const float steer_strength = 30.f;
 const float distance_threshold = 100.f;
+// separation, alignment, cohesion
+const float weights[3] = {0.4f, 0.2f, 0.2f};
 
 struct vector_and_degree {
   Vector2f vec;
@@ -84,7 +86,7 @@ float calculate_separation(const Shape *source,
   com.x /= -num_of_points;
   com.y /= -num_of_points;
 
-  auto com_angle = com.angle().asDegrees();
+  auto com_angle = -com.angle().asDegrees();
   if (com_angle < 0) com_angle += 360;
   float direction = utils::rotate_direction(source->getRotation().asDegrees(), com_angle);
   
@@ -124,11 +126,11 @@ float calculate_cohesion(const Shape *source,
 
   com = com - source->getPosition();
 
-  auto com_angle = com.angle().asDegrees();
+  auto com_angle = -com.angle().asDegrees();
   if (com_angle < 0) com_angle += 360;
   float direction = utils::rotate_direction(source->getRotation().asDegrees(), com_angle);
   
-  return steer_strength * direction;
+  return steer_strength * direction * num_of_points;
 }
 
 
@@ -147,7 +149,6 @@ void SimulationManager::apply_boid_behavior(float deltaTime) {
         }
       }
     }
-    const float weights[3] = {0.3f, 0.3f, 0.3f};
     auto applied_rotation = weights[0] * calculate_separation(shapes[i], within_radius) +
                             weights[1] * calculate_alignment(shapes[i], within_radius) +
                             weights[2] * calculate_cohesion(shapes[i], within_radius);
